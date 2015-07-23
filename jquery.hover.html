@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>鼠标事件延时切换</title>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="jquery.hoverDelay.min.js"></script>
+<script type="text/javascript" src="jQuery.tips.min.js"></script>
+<style>body{font:12px 'Microsoft Yahei',Tahoma,Arial;_font-family:Tahoma,Arial;}a{color:#039;padding:1px 3px;}a:hover{color:#F00;}.demoList{margin-bottom:30px;}h1{color:#CCC;font-size:16px;}#api{width:800px;}#api table{width:99%;}#api table th{color:#808080;font-weight:bold;text-shadow:1px 1px #FFF;}#api td,#api th{padding:3px;}#api td.time,#api th.time{color:#999;text-align:right;width:110px;}#api tr.odd td,#api tr.odd th{background-color:#F7F9FD;}#demo{overflow:hidden;height:300px;}#demo em{color:#808080;}#demo .nav{position:relative;}.demo-btn{width:100px;text-align:center;border:solid #003 1px;background:#039;color:#FFF;padding:3px 0;margin-right:6px;}#demo-menu{display:none;margin:0;width:300px;position:absolute;left:110px;top:0;z-index:9;padding:8px;border:solid 1px #039;background:#FFF;}#demo-menu *{padding:0;margin:0;list-style:none;}</style>
+<script type="text/javascript">
+jQuery(function ($) {
+	$('*[title]').tips({
+		hover: true
+	});
+});
+</script>
+</head>
+<body>
+<h1>jQuery 延时器：jQuery.mouseDelay v1.2</h1>
+<div id="info" class="demoList">
+<h3>作用</h3>
+<p>延时操作目的是为了防止用户误触发事件，一般情况下鼠标指针小于150毫秒的停留时间都可以被忽略。</p>
+</div>
+<div id="api" class="demoList">
+<h3>接口</h3>
+<table>
+<tr class="odd">
+<th>方法</th>
+<th>参数</th>
+<th>说明</th>
+</tr>
+<tr>
+<td>mouseDelay (<em title="数值">speed</em>, <em title="字符串或数值">group</em>)</td>
+<td>速度, 设置延时分组名称</td>
+<td>设置延时触发效果. 两个参数都是可选的</td>
+</tr>
+<tr class="odd">
+<td>mouseDelayPause()</td>
+<td>[无]</td>
+<td>冻结选定元素的延时器</td>
+</tr>
+<tr>
+<td>jQuery.mouseDelay.pause (<em title="字符串或数值">group</em>) </td>
+<td>延时分组名称</td>
+<td>冻结指定分组的延时器</td>
+</tr>
+<tr class="odd">
+<td>jQuery.mouseDelay.get ()</td>
+<td>[无]</td>
+<td>获取一个不重复的分组名</td>
+</tr>
+</table>
+</div>
+<div id="down">
+<h3>下载</h3>
+<p>选择其一：
+<ul>
+<li><a href="jquery.mouseDelay.js" title="源码 (1.31kb)">jQuery.mouseDelay.js</a> </li>
+<li><a href="jquery.mouseDelay.min.js" title="压缩版 (727字节)">jQuery.mouseDelay.min.js</a></li>
+</ul>
+</p>
+</div>
+<div id="demo" class="demoList">
+<h3>演示</h3>
+<p><em>快速划过的操作将会被忽略，同时支持对同类操作进行分组（如：划过下拉菜单面板不会触发按钮离开的事件）</em></p>
+<p>
+<div class="nav">
+<button id="demo-hover" class="demo-btn" title="多元素演示：按钮与下拉菜单定义的over与out在延时器属于同一个自定义组">hover demo</button>
+<button id="demo-hover2" class="demo-btn" title="单元素演示：over与out共享延时器的默认组">hover demo</button>
+<a id="demo-unhover" href="#" title="卸载hover事件">unbind hover</a>
+<ul id="demo-menu">
+<li><a href="#">vbscript</a></li>
+<li><a href="#">正则表达式</a></li>
+<li><a href="#">javascript</a></li>
+<li><a href="#">批处理</a></li>
+<li><a href="#">服务器软件</a></li>
+<li><a href="#">素材下载</a></li>
+</ul>
+</div>
+</p>
+</div>
+<script type="text/javascript">
+/*demo script*/
+jQuery(function ($) {
+	var group = 'menu_1',//也可以使用：$.mouseDelay.get()生成一个不重复的名称
+		$deomHover = $('#demo-hover'),
+		$deomHover2 = $('#demo-hover2'),
+		$demoMenu = $('#demo-menu'),
+		$demoUnhover = $('#demo-unhover');
+	
+	// 按钮1
+	$deomHover.mouseDelay(false, group).hover(function () {
+		$deomHover.html('hover show');
+		$demoMenu.show();
+	}, function () {
+		$deomHover.html('hover hide');
+		$demoMenu.hide();
+	}).addClass('testAddClass');
+	
+	// 按钮一的弹出层
+	$demoMenu.mouseDelay(false, group).hover(null, function () {
+		$deomHover.html('hover hide');
+		$demoMenu.hide();
+	});
+	
+	// 按钮2
+	$deomHover2.mouseDelay().hover(function () {
+		$deomHover2.html('hover over');
+	}, function () {
+		$deomHover2.html('hover out');
+	});
+	
+	// 卸载hover事件
+	$demoUnhover.click(function () {
+		// jQuery卸载hover事件其实是操作mouseenter与mouseleave
+		$deomHover.unbind('mouseenter').unbind('mouseleave');
+		$demoMenu.unbind('mouseenter').unbind('mouseleave');
+		$deomHover2.unbind('mouseenter').unbind('mouseleave');
+		$(this).untips().attr('title', '提示：事件已经卸载！').tips({time:3000,clickFn:function () {this.close()}})
+		return false;
+	});
+	
+	// 测试未启用延时的hover效果
+	$('a').hover(function () {
+		$(this).css('backgroundColor', '#F7F9FD');
+	}, function () {
+		$(this).css('backgroundColor', '#FFF')
+	});
+});
+</script>
+</body>
+</html>
